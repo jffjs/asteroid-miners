@@ -14,7 +14,9 @@ Preloader.prototype = {
     this.load.onLoadComplete.addOnce(this.onLoadComplete, this);
     this.load.setPreloadSprite(this.asset);
     this.load.image('player', 'assets/images/player.png');
+    this.load.image('background', 'assets/images/backgrounds/darkPurple.png');
     this.load.bitmapFont('minecraftia', 'assets/fonts/minecraftia.png', 'assets/fonts/minecraftia.xml');
+    this.load.atlasXML('sprites', 'assets/images/sprites/sheet.png', 'assets/images/sprites/sheet.xml');
   },
 
   create: function () {
