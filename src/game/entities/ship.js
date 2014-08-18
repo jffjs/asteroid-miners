@@ -17,7 +17,6 @@ Ship.prototype.create = function() {
       y = this.game.height / 2
   this.sprite = this.game.add.sprite(x, y, 'sprites', 'playerShip1_blue.png');
   this.sprite.anchor.setTo(0.5, 0.5);
-  //this.sprite.angle = -90;
 
   // Enable physics on the ship
   this.game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
