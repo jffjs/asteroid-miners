@@ -22,13 +22,17 @@ Game.prototype = {
     }
 
     this.ship = new Ship(this.game, true);
-    this.asteroid = AsteroidFactory.random(this.game);
-    this.asteroid.create();
+    var startingAsteroids = 10;
+    for(var i = 0; i < startingAsteroids; i++) {
+      this.asteroids.push(AsteroidFactory.random(this.game).create());
+    }
   },
 
   update: function () {
     this.ship.update();
-    this.asteroid.update();
+    for(var i = 0; i < this.asteroids.length; i++) {
+      this.asteroids[i].update();
+    }
   }
 };
 

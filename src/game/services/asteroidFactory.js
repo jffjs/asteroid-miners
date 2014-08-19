@@ -3,7 +3,7 @@
 var Asteroid = require('../entities/asteroid');
 
 var MIN_SPEED = 20,
-    MAX_SPEED = 250,
+    MAX_SPEED = 150,
     MIN_ROTATION = 20,
     MAX_ROTATION = 100,
     COLORS = ['brown', 'grey'],
