@@ -1,7 +1,10 @@
 'use strict';
 
+var Projectile = require('./projectile');
+
 var Ship = function(game, createOnNew) {
   this.game = game;
+  this.projectiles = [];
   if (createOnNew) {
     this.create();
   }
@@ -67,6 +70,12 @@ Ship.prototype.update = function() {
     this.sprite.body.acceleration.setTo(0, 0);
 
     // TODO: Show the frame from the spritesheet with the engine off
+  }
+
+  if (keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
+    var projectileVelocity = new Phaser.Point(-400 * Math.sin(this.sprite.angle), -400 * Math.cos(this.sprite.angle));
+    var projectile = new Projectile(this.game, this.sprite.body.center, projectileVelocity, this.sprite.angle);
+    this.projectiles.push(projectile.create());
   }
 };
 
