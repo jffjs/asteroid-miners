@@ -15,10 +15,12 @@ Ship.prototype.create = function() {
   this.ROTATION_SPEED = 180; // degrees/second
   this.ACCELERATION = 200; // pixels/second/second
   this.MAX_SPEED = 250; // pixels/second
+  this.LASER_DELAY = 400;
 
   var x = this.game.width / 2,
       y = this.game.height / 2
   this.sprite = this.game.add.sprite(x, y, 'sprites', 'playerShip1_blue.png');
+  //this.sprite = this.game.add.sprite(x, y, 'ship');
   this.sprite.anchor.setTo(0.5, 0.5);
   this.sprite.scale.x = 0.5;
   this.sprite.scale.y = 0.5;
@@ -26,6 +28,7 @@ Ship.prototype.create = function() {
   // Enable physics on the ship
   this.game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
 
+  this.sprite.body.facing = Phaser.UP;
   // Set maximum velocity
   this.sprite.body.maxVelocity.setTo(this.MAX_SPEED, this.MAX_SPEED); // x, y
 
@@ -61,8 +64,8 @@ Ship.prototype.update = function() {
   if (keyboard.isDown(Phaser.Keyboard.UP)) {
     // If the UP key is down, thrust
     // Calculate acceleration vector based on this.angle and this.ACCELERATION
-    this.sprite.body.acceleration.y = -1 * Math.cos(this.sprite.rotation) * this.ACCELERATION;
     this.sprite.body.acceleration.x = Math.sin(this.sprite.rotation) * this.ACCELERATION;
+    this.sprite.body.acceleration.y = -1 * Math.cos(this.sprite.rotation) * this.ACCELERATION;
 
     // TODO: Show the frame from the spritesheet with the engine on
   } else {
@@ -73,9 +76,16 @@ Ship.prototype.update = function() {
   }
 
   if (keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
-    var projectileVelocity = new Phaser.Point(-400 * Math.sin(this.sprite.angle), -400 * Math.cos(this.sprite.angle));
-    var projectile = new Projectile(this.game, this.sprite.body.center, projectileVelocity, this.sprite.angle);
-    this.projectiles.push(projectile.create());
+    if (this.lastFired === undefined) {
+      this.lastFired = 0;
+    }
+
+    if (this.game.time.now - this.lastFired >= this.LASER_DELAY) {
+      this.lastFired = this.game.time.now;
+      var projectileVelocity = new Phaser.Point(400 * Math.sin(this.sprite.rotation), -400 * Math.cos(this.sprite.rotation));
+      var projectile = new Projectile(this.game, this.sprite.body.center, projectileVelocity, this.sprite.angle);
+      this.projectiles.push(projectile.create());
+    }
   }
 };
 
