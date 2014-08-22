@@ -4,7 +4,6 @@ var Projectile = require('./projectile');
 
 var Ship = function(game, createOnNew) {
   this.game = game;
-  this.projectiles = [];
   if (createOnNew) {
     this.create();
   }
@@ -15,7 +14,8 @@ Ship.prototype.create = function() {
   this.ROTATION_SPEED = 180; // degrees/second
   this.ACCELERATION = 200; // pixels/second/second
   this.MAX_SPEED = 250; // pixels/second
-  this.LASER_DELAY = 400;
+  this.PROJECTILE_DELAY = 400;
+  this.MAX_PROJECTILES = 10;
 
   var x = this.game.width / 2,
       y = this.game.height / 2
@@ -39,6 +39,12 @@ Ship.prototype.create = function() {
     Phaser.Keyboard.DOWN
   ]);
 
+  this.projectilePool = this.game.add.group();
+  for(var i = 0; i < this.MAX_PROJECTILES; i++) {
+    var projectile = new Projectile(this.game, this.sprite);
+    this.projectilePool.add(projectile.sprite);
+    projectile.sprite.kill();
+  }
   return this;
 };
 
@@ -76,17 +82,30 @@ Ship.prototype.update = function() {
   }
 
   if (keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
-    if (this.lastFired === undefined) {
-      this.lastFired = 0;
-    }
-
-    if (this.game.time.now - this.lastFired >= this.LASER_DELAY) {
-      this.lastFired = this.game.time.now;
-      var projectileVelocity = new Phaser.Point(400 * Math.sin(this.sprite.rotation), -400 * Math.cos(this.sprite.rotation));
-      var projectile = new Projectile(this.game, this.sprite.body.center, projectileVelocity, this.sprite.angle);
-      this.projectiles.push(projectile.create());
-    }
+    this.fireProjectile();
   }
+};
+
+Ship.prototype.fireProjectile = function() {
+  if (this.lastFired === undefined) {
+    this.lastFired = 0;
+  }
+
+  if (this.game.time.now - this.lastFired < this.PROJECTILE_DELAY) {
+    return;
+  }
+
+  this.lastFired = this.game.time.now;
+  var projectile = this.projectilePool.getFirstDead();
+
+  if (projectile === null || projectile === undefined) {
+    return;
+  }
+
+  projectile.revive();
+  projectile.checkWorldBounds = true;
+  projectile.outOfBoundsKill = true;
+  projectile.entity.fire();
 };
 
 module.exports = Ship;
