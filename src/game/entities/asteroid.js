@@ -35,6 +35,7 @@ Asteroid.prototype.create = function() {
   this.game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
   this.sprite.body.angularVelocity = this.rotation;
   this.sprite.body.velocity = this.velocity;
+  this.sprite.entity = this;
 
   return this;
 };
