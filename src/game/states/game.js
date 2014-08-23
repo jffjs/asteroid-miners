@@ -1,7 +1,5 @@
 'use strict';
 var Ship = require('../entities/ship');
-var Asteroid = require('../entities/asteroid');
-var AsteroidFactory = require('../services/asteroidFactory');
 var AsteroidGroup = require('../entities/asteroidGroup');
 
 function Game() {
@@ -24,18 +22,11 @@ Game.prototype = {
 
     this.ship = new Ship(this.game, true);
     this.asteroidGroup = new AsteroidGroup(this.game).create();
-    //var startingAsteroids = 10;
-    //for(var i = 0; i < startingAsteroids; i++) {
-      //this.asteroids.push(AsteroidFactory.random(this.game).create());
-    //}
   },
 
   update: function () {
     this.ship.update();
     this.asteroidGroup.update();
-    //for(var i = 0; i < this.asteroids.length; i++) {
-      //this.asteroids[i].update();
-    //}
   }
 };
 
